@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class EnemyPatrol : MonoBehaviour
 {
-
     [Header("Patrol Points")]
     public Transform pointA;                  // Punto A para patrullar
     public Transform pointB;                  // Punto B para patrullar
@@ -19,12 +18,14 @@ public class EnemyPatrol : MonoBehaviour
 
     private Transform _currentTarget;        // Objetivo actual de patrulla
     private Rigidbody _rb;                   // Rigidbody del enemigo
+    private Animator _animator;              // Animator del enemigo
     private bool _isChasing;                 // Estado: persiguiendo o no
 
     void Awake()
     {
         // Inicializamos componentes y estado
         _rb = GetComponent<Rigidbody>();
+        _animator = GetComponent<Animator>();
         _currentTarget = pointA;             // Comenzamos en el punto A
         _isChasing = false;
     }
@@ -46,12 +47,16 @@ public class EnemyPatrol : MonoBehaviour
         {
             Patrol();
         }
+
+        // Actualizar parámetros del Animator
+        UpdateAnimation();
     }
 
     private void Patrol()
     {
         // Mover hacia el objetivo actual (puntos A y B)
         Vector3 direction = (_currentTarget.position - transform.position).normalized;
+        direction.y = 0; // Bloquear movimiento en Y
         _rb.velocity = direction * patrolSpeed;
 
         // Cambiar objetivo cuando se alcanza el punto actual
@@ -65,7 +70,18 @@ public class EnemyPatrol : MonoBehaviour
     {
         // Mover hacia el jugador
         Vector3 direction = (player.position - transform.position).normalized;
+        direction.y = 0; // Bloquear movimiento en Y
         _rb.velocity = direction * chaseSpeed;
+    }
+
+    private void UpdateAnimation()
+    {
+        // Calcular velocidad actual
+        float speed = _rb.velocity.magnitude;
+
+        // Actualizar los parámetros del Animator
+        _animator.SetFloat("Speed", speed);               // Velocidad del enemigo
+        _animator.SetBool("IsChasing", _isChasing);       // Estado de persecución
     }
 
     private void OnDrawGizmosSelected()
