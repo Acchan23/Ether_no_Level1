@@ -16,10 +16,12 @@ public class EnemyPatrol : MonoBehaviour
     [Header("Player Reference")]
     public Transform player;                 // Referencia al transform del jugador
 
-    private Transform _currentTarget;        // Objetivo actual de patrulla
-    private Rigidbody _rb;                   // Rigidbody del enemigo
-    private Animator _animator;              // Animator del enemigo
-    private bool _isChasing;                 // Estado: persiguiendo o no
+    private Transform _currentTarget;        
+    private Rigidbody _rb;                   
+    private Animator _animator;              
+    private bool _isChasing;                 
+    public float attackRange = 1.5f; 
+    private bool _isAttacking = false; 
 
     void Awake()
     {
@@ -35,11 +37,28 @@ public class EnemyPatrol : MonoBehaviour
         // Calcular distancia al jugador
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
-        // Determinar estado: patrulla o persigue al jugador
-        _isChasing = distanceToPlayer <= detectionRange;
+         if (distanceToPlayer <= attackRange)
+        {
+            _isChasing = false;
+            _isAttacking = true;
+        }
+        else if (distanceToPlayer <= detectionRange)
+        {
+            _isChasing = true;
+            _isAttacking = false;
+        }
+        else
+        {
+            _isChasing = false;
+            _isAttacking = false;
+        }
 
-        // Cambiar comportamiento basado en el estado
-        if (_isChasing)
+        // Ejecutar comportamiento basado en el estado
+        if (_isAttacking)
+        {
+            AttackPlayer();
+        }
+        else if (_isChasing)
         {
             ChasePlayer();
         }
@@ -81,10 +100,31 @@ public class EnemyPatrol : MonoBehaviour
         _rb.velocity = direction * chaseSpeed;
 
         if (direction != Vector3.zero)
-    {
+        {
         Quaternion targetRotation = Quaternion.LookRotation(direction);
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * chaseSpeed);
+        }
     }
+
+    private void AttackPlayer()
+    {
+        // Detener movimiento
+        _rb.velocity = Vector3.zero;
+
+        // Orientar hacia el jugador
+        Vector3 direction = (player.position - transform.position).normalized;
+        direction.y = 0;
+        if (direction != Vector3.zero)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * patrolSpeed);
+        }
+
+        // Realizar ataque (en la animación puede haber un evento que aplique el daño)
+        if (_animator != null)
+        {
+            _animator.SetTrigger("Attack");
+        }
     }
 
     private void UpdateAnimation()
@@ -95,6 +135,7 @@ public class EnemyPatrol : MonoBehaviour
         // Actualizar los parámetros del Animator
         _animator.SetFloat("Speed", speed);               // Velocidad del enemigo
         _animator.SetBool("IsChasing", _isChasing);       // Estado de persecución
+        _animator.SetBool("IsAttacking", _isAttacking);
     }
 
     private void OnDrawGizmosSelected()
