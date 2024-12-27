@@ -59,6 +59,13 @@ public class EnemyPatrol : MonoBehaviour
         direction.y = 0; // Bloquear movimiento en Y
         _rb.velocity = direction * patrolSpeed;
 
+        // Cambiar la orientación hacia el objetivo actual
+    if (direction != Vector3.zero)
+    {
+        Quaternion targetRotation = Quaternion.LookRotation(direction);
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * patrolSpeed);
+    }
+
         // Cambiar objetivo cuando se alcanza el punto actual
         if (Vector3.Distance(transform.position, _currentTarget.position) < 0.1f)
         {
@@ -72,6 +79,12 @@ public class EnemyPatrol : MonoBehaviour
         Vector3 direction = (player.position - transform.position).normalized;
         direction.y = 0; // Bloquear movimiento en Y
         _rb.velocity = direction * chaseSpeed;
+
+        if (direction != Vector3.zero)
+    {
+        Quaternion targetRotation = Quaternion.LookRotation(direction);
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * chaseSpeed);
+    }
     }
 
     private void UpdateAnimation()

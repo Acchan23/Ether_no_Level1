@@ -451,7 +451,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pointA: {fileID: 1971509329}
   pointB: {fileID: 2084635670}
-  patrolSpeed: 2
+  patrolSpeed: 1
   chaseSpeed: 4
   detectionRange: 4
   player: {fileID: 626696112}
@@ -559,7 +559,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 80
+  m_Constraints: 112
   m_CollisionDetection: 1
 --- !u!4 &626696112 stripped
 Transform:
@@ -581,7 +581,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 5
   rotationSpeed: 720
-  jumpForce: 5
+  jumpForce: 7
 --- !u!1001 &1629585463
 PrefabInstance:
   m_ObjectHideFlags: 0
