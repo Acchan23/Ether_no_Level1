@@ -6,15 +6,14 @@ public class PlayerMovement : MonoBehaviour
 {
     public float speed = 5f;           // Velocidad de movimiento
     public float rotationSpeed = 720f; // Velocidad de rotación (grados por segundo)
-    public float jumpForce = 5f;      // Fuerza de salto
-
-    private Rigidbody _rb;            // Referencia al Rigidbody
-    private Vector3 _movement;        // Vector de dirección del movimiento
-    private bool _isGrounded;         // Determina si está tocando el suelo
+    public float jumpForce = 6f;      
+    public float groundCheckDistance = 0.1f; // Distancia para comprobar el suelo
+    private Rigidbody _rb;           
+    private Vector3 _movement;      
+    private bool _isGrounded;         
 
     void Awake()
     {
-        // Obtenemos el componente Rigidbody
         _rb = GetComponent<Rigidbody>();
     }
 
@@ -27,7 +26,10 @@ public class PlayerMovement : MonoBehaviour
         // Creamos el vector de movimiento basado en las entradas
         _movement = new Vector3(horizontal, 0, vertical).normalized;
 
-        // Verifica si se puede saltar
+        // Verificamos si el jugador está tocando el suelo
+        CheckGrounded();
+
+        // Saltar solo si está en el suelo
         if (Input.GetKeyDown(KeyCode.Space) && _isGrounded)
         {
             _rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
@@ -48,23 +50,18 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void CheckGrounded()
     {
-        // Verifica si el personaje toca el suelo
-        if (collision.gameObject.CompareTag("Ground"))
-        {
-            _isGrounded = true;
-        }
+        // Lanza un rayo hacia abajo para verificar si está tocando el suelo
+        _isGrounded = Physics.Raycast(transform.position, Vector3.down, groundCheckDistance, LayerMask.GetMask("Ground"));
     }
 
-    private void OnCollisionExit(Collision collision)
+    private void OnCollisionEnter(Collision collision)
     {
-        // Detecta cuando deja de tocar el suelo
-        if (collision.gameObject.CompareTag("Ground"))
-        {
-            _isGrounded = false;
-        }
+        // Opcional: Log para debug de colisiones
+        Debug.Log("Colisión con: " + collision.gameObject.name);
     }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("TeleportTrigger"))
@@ -72,9 +69,11 @@ public class PlayerMovement : MonoBehaviour
             Teleport();
         }
     }
+
     void Teleport()
     {
-        transform.position = new Vector3(-2,1,6);
-        Debug.Log ("Teleportado");
+        transform.position = new Vector3(-2, 1, 6);
+        Debug.Log("Teleportado");
     }
 }
+
