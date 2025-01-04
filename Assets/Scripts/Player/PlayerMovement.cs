@@ -7,7 +7,7 @@ public class PlayerMovement : MonoBehaviour
     public float speed = 5f;           // Velocidad de movimiento
     public float rotationSpeed = 720f; // Velocidad de rotación (grados por segundo)
     public float jumpForce = 6f;      
-    public float groundCheckDistance = 0.1f; // Distancia para comprobar el suelo
+    public float groundCheckDistance = 0.5f; // Distancia para comprobar el suelo
     private Rigidbody _rb;           
     private Vector3 _movement;      
     private bool _isGrounded;         
