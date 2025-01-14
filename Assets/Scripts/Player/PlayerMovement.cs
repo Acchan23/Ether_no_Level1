@@ -70,9 +70,9 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    void Teleport()
+    private void Teleport()
     {
-        transform.position = new Vector3(-2, 1, 6);
+        transform.position = new Vector3(21, 12, 8);
         Debug.Log("Teleportado");
     }
 }
