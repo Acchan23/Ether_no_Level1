@@ -62,9 +62,9 @@ public class PlayerMovement : MonoBehaviour
         Debug.Log("Colisión con: " + collision.gameObject.name);
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider player)
     {
-        if (other.CompareTag("TeleportTrigger"))
+        if (player.CompareTag("TeleportTrigger"))
         {
             Teleport();
         }
@@ -72,7 +72,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Teleport()
     {
-        transform.position = new Vector3(21, 12, 8);
+        transform.position = new Vector3(10, 8.5f, 28);
         Debug.Log("Teleportado");
     }
 }
