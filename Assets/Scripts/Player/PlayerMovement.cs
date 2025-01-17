@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     public float speed = 5f;           // Velocidad de movimiento
-    public float rotationSpeed = 720f; // Velocidad de rotación (grados por segundo)
+    public float rotationSpeed = 720f; // Velocidad de rotación
     public float jumpForce = 6f;      
     public float groundCheckDistance = 0.5f; // Distancia para comprobar el suelo
     private Rigidbody _rb;           
@@ -19,7 +19,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        // Capturamos la entrada del jugador (Horizontal y Vertical)
+        
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
 
@@ -72,7 +72,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Teleport()
     {
-        transform.position = new Vector3(10, 8.5f, 29);
+        transform.position = new Vector3(10, 9.5f, 29);
         Debug.Log("Teleportado");
     }
 }
