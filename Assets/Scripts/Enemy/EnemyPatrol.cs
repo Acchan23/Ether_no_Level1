@@ -12,6 +12,8 @@ public class EnemyPatrol : MonoBehaviour
     public float patrolSpeed = 2f;           // Velocidad mientras patrulla
     public float chaseSpeed = 4f;            // Velocidad cuando persigue al jugador
     public float detectionRange = 5f;        // Rango de detección del jugador
+    private float proximoAtaque;
+    private float tiempoEntreAtaques = 2f;
 
     [Header("Player Reference")]
     public Transform player;                 // Referencia al transform del jugador
@@ -22,6 +24,8 @@ public class EnemyPatrol : MonoBehaviour
     private bool _isChasing;                 
     public float attackRange = 1.5f; 
     private bool _isAttacking = false; 
+    public float dano = 10f;
+
 
     void Awake()
     {
@@ -57,6 +61,7 @@ public class EnemyPatrol : MonoBehaviour
         if (_isAttacking)
         {
             AttackPlayer();
+            proximoAtaque = Time.time + tiempoEntreAtaques;
         }
         else if (_isChasing)
         {
@@ -73,9 +78,9 @@ public class EnemyPatrol : MonoBehaviour
 
     private void Patrol()
     {
-        // Mover hacia el objetivo actual (puntos A y B)
+        // Mover hacia el objetivo puntos A y B
         Vector3 direction = (_currentTarget.position - transform.position).normalized;
-        direction.y = 0; // Bloquear movimiento en Y
+        direction.y = 0; 
         _rb.velocity = direction * patrolSpeed;
 
         // Cambiar la orientación hacia el objetivo actual
@@ -119,6 +124,14 @@ public class EnemyPatrol : MonoBehaviour
             Quaternion targetRotation = Quaternion.LookRotation(direction);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * patrolSpeed);
         }
+
+        Vida vidaJugador = player.GetComponent<Vida>();
+        if (vidaJugador != null)
+        {
+            vidaJugador.RecibirDaño(dano);
+        }
+
+        Debug.Log($"{gameObject.name} atacó al jugador");
 
         // Realizar ataque (en la animación puede haber un evento que aplique el daño)
         if (_animator != null)
