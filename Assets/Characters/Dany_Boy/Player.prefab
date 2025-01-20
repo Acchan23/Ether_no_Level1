@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 32982540959361930}
   - component: {fileID: 987882925497241803}
   - component: {fileID: 5537316174673804755}
+  - component: {fileID: 4385484977275317279}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -149,6 +150,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vidaMaxima: 100
   barraDeVida: {fileID: 0}
+--- !u!114 &4385484977275317279
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2624631364188269467}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70b3db236299e476a8b1020b121635ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 528687954483111295}
 --- !u!1 &7695509531058281175
 GameObject:
   m_ObjectHideFlags: 0
@@ -322,6 +336,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0794c0ed9395d49ed93e0eeac4cbc2df, type: 3}
+--- !u!95 &528687954483111295 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 3736840531253862385, guid: 0794c0ed9395d49ed93e0eeac4cbc2df,
+    type: 3}
+  m_PrefabInstance: {fileID: 3786870116429691534}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5888010318273298181 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7294635671452829067, guid: 0794c0ed9395d49ed93e0eeac4cbc2df,
