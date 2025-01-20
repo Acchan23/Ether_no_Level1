@@ -9,15 +9,13 @@ namespace Player
         private Animator _animator;      // Referencia al Animator
         private PlayerMovement _playerMovement; // Referencia al script PlayerMovement
         private PlayerAttack _playerAttack;     // Referencia al script PlayerAttack
-        // private Rigidbody _rb; // Eliminar esta línea si no es necesaria
-
+        private bool isAttacking;
 
         void Awake()
         {
             _animator = GetComponent<Animator>();
             _playerMovement = GetComponent<PlayerMovement>();
             _playerAttack = GetComponent<PlayerAttack>();
-            //_rb = GetComponent<Rigidbody>();
         }
 
         void Update()
@@ -39,15 +37,23 @@ namespace Player
             // Verificamos si el jugador está saltando
             if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
             {
-                _animator.SetTrigger("Jump");
+                _animator.SetBool("IsJumping", true);
+                StartCoroutine(ResetJumpParameter());
             }
 
             // Verificamos si el jugador ataca
             if (Input.GetMouseButtonDown(0)) // Click izquierdo del mouse
             {
-                _animator.SetTrigger("Attack");
+                _animator.SetBool("IsAttacking", isAttacking);
                 _playerAttack.Atacar(); // Ejecutamos la lógica de ataque
             }
+        }
+
+        // Corutina para restablecer el parámetro IsJumping después del salto
+        private IEnumerator ResetJumpParameter()
+        {
+            yield return new WaitForSeconds(0.1f); // Ajusta el tiempo según la duración del salto
+            _animator.SetBool("IsJumping", false);
         }
     }
 }

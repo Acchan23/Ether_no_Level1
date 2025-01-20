@@ -44,7 +44,7 @@ namespace Player
             float currentSpeed = Input.GetKey(KeyCode.LeftShift) ? runningSpeed : speed;
 
             // Aplicamos movimiento
-            Vector3 move = _movement * currentSpeed * Time.fixedDeltaTime;
+            Vector3 move = currentSpeed * Time.fixedDeltaTime * _movement;
             _rb.MovePosition(_rb.position + move);
 
             // Rotación hacia la dirección del movimiento (si hay movimiento)
