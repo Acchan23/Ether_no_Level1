@@ -66,7 +66,7 @@ public class Vida : MonoBehaviour
         Debug.Log($"{gameObject.name} ha muerto.");
         animator.SetBool("IsDead", true); // Activa la animación de muerte
         animator.Play("Muerte"); //Forzar la animación de muerte
-        yield return new WaitForSeconds(5f); // Espera 5 segundos antes de destruir el objeto
+        yield return new WaitForSeconds(4f); // Espera 5 segundos antes de destruir el objeto
         Destroy(gameObject); // Destruye el objeto
     }
 }

@@ -2,10 +2,12 @@ using System.Collections;
 using UnityEngine;
 
 
-public class EnemySpawner : MonoBehaviour
+namespace Enemy
 {
-    public GameObject enemyPrefab; // El prefab del enemigo
-    public int numberOfEnemies = 20; // Número total de enemigos a instanciar
+    public class EnemySpawner : MonoBehaviour
+{
+    public GameObject enemyPrefab; 
+    public int numberOfEnemies = 20;
     public float spawnInterval = 2f; // Intervalo de tiempo entre cada spawn
     public Vector3 spawnAreaMin; // Coordenadas mínimas del área de spawn
     public Vector3 spawnAreaMax; // Coordenadas máximas del área de spawn
@@ -38,4 +40,5 @@ public class EnemySpawner : MonoBehaviour
     }
 }
 
+}
 

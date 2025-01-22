@@ -13,7 +13,7 @@ public class EnemyPatrol : MonoBehaviour
     public float chaseSpeed = 4f;            // Velocidad cuando persigue al jugador
     public float detectionRange = 5f;        // Rango de detección del jugador
     private float proximoAtaque;
-    private float tiempoEntreAtaques = 2f;
+    private float tiempoEntreAtaques = 3;
 
     [Header("Player Reference")]
     public Transform player;                 // Referencia al transform del jugador
@@ -37,44 +37,45 @@ public class EnemyPatrol : MonoBehaviour
     }
 
     void Update()
+{
+    // Calcular distancia al jugador
+    float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+
+    if (distanceToPlayer <= attackRange)
     {
-        // Calcular distancia al jugador
-        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
-
-         if (distanceToPlayer <= attackRange)
-        {
-            _isChasing = false;
-            _isAttacking = true;
-        }
-        else if (distanceToPlayer <= detectionRange)
-        {
-            _isChasing = true;
-            _isAttacking = false;
-        }
-        else
-        {
-            _isChasing = false;
-            _isAttacking = false;
-        }
-
-        // Ejecutar comportamiento basado en el estado
-        if (_isAttacking)
-        {
-            AttackPlayer();
-            proximoAtaque = Time.time + tiempoEntreAtaques;
-        }
-        else if (_isChasing)
-        {
-            ChasePlayer();
-        }
-        else
-        {
-            Patrol();
-        }
-
-        // Actualizar parámetros del Animator
-        UpdateAnimation();
+        _isChasing = false;
+        _isAttacking = true;
     }
+    else if (distanceToPlayer <= detectionRange)
+    {
+        _isChasing = true;
+        _isAttacking = false;
+    }
+    else
+    {
+        _isChasing = false;
+        _isAttacking = false;
+    }
+
+    // Ejecutar comportamiento basado en el estado
+    if (_isAttacking && Time.time >= proximoAtaque)
+    {
+        AttackPlayer();
+        proximoAtaque = Time.time + tiempoEntreAtaques;
+    }
+    else if (_isChasing)
+    {
+        ChasePlayer();
+    }
+    else
+    {
+        Patrol();
+    }
+
+    // Actualizar parámetros del Animator
+    UpdateAnimation();
+}
+
 
     private void Patrol()
     {
@@ -91,7 +92,7 @@ public class EnemyPatrol : MonoBehaviour
     }
 
         // Cambiar objetivo cuando se alcanza el punto actual
-        if (Vector3.Distance(transform.position, _currentTarget.position) < 0.6f)
+        if (Vector3.Distance(transform.position, _currentTarget.position) < 1.5f)
         {
             _currentTarget = _currentTarget == pointA ? pointB : pointA;
         }
