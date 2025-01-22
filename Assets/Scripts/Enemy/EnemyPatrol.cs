@@ -91,7 +91,7 @@ public class EnemyPatrol : MonoBehaviour
     }
 
         // Cambiar objetivo cuando se alcanza el punto actual
-        if (Vector3.Distance(transform.position, _currentTarget.position) < 0.1f)
+        if (Vector3.Distance(transform.position, _currentTarget.position) < 0.6f)
         {
             _currentTarget = _currentTarget == pointA ? pointB : pointA;
         }
