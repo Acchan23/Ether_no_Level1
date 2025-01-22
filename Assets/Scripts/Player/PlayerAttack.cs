@@ -41,7 +41,7 @@ namespace Player
                 }
             }
 
-            yield return new WaitForSeconds(0.5f); // Duración de la animación de ataque (ajústala según el clip)
+            yield return new WaitForSeconds(0.5f); // Duración de la animación de ataque
             _animator.SetBool("IsAttacking", false);
         }
     }

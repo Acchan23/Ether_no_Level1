@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -45,7 +46,7 @@ namespace Player
             if (Input.GetMouseButtonDown(0)) // Click izquierdo del mouse
             {
                 _animator.SetBool("IsAttacking", isAttacking);
-                _playerAttack.Atacar(); // Ejecutamos la lógica de ataque
+                StartCoroutine(_playerAttack.Atacar()); // Ejecutamos la lógica de ataque
             }
         }
 
