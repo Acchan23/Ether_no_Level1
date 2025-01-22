@@ -14,6 +14,7 @@ public class VictoryCondition : MonoBehaviour
     public Camera mainCamera; // Cámara principal
     public float cameraMoveDuration = 2f; // Duración del movimiento de cámara
     public Canvas victoryCanvas; // Canvas para victoria
+    public Canvas gameOverCanvas; // Canvas para tiempo terminado
     private CameraFollow cameraFollowScript; // Script de seguimiento de la cámara
 
     // UI con TextMeshPro
@@ -28,6 +29,9 @@ public class VictoryCondition : MonoBehaviour
         // Desactivar el Canvas de Victory al inicio
         if (victoryCanvas != null)
             victoryCanvas.gameObject.SetActive(false);
+
+        if (gameOverCanvas != null)
+            gameOverCanvas.gameObject.SetActive(false);
 
         UpdateUI(); // Actualiza la interfaz al inicio
     }
@@ -47,7 +51,9 @@ public class VictoryCondition : MonoBehaviour
         if (timeRemaining <= 0)
         {
             Debug.Log("Tiempo agotado. ¡Perdiste!");
-            // Puedes implementar una lógica adicional para el Game Over aquí.
+
+            if (gameOverCanvas != null)
+                gameOverCanvas.gameObject.SetActive(true);
             return;
         }
 
@@ -103,7 +109,7 @@ public class VictoryCondition : MonoBehaviour
             yield return null;
         }
 
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(3f);
 
         mainCamera.transform.position = originalPosition;
         mainCamera.transform.rotation = originalRotation;

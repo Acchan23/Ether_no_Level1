@@ -2610,11 +2610,10 @@ MonoBehaviour:
   timeLimit: 600
   portal: {fileID: 0}
   bossArea: {fileID: 0}
-  player: {fileID: 0}
+  player: {fileID: 4957605393579145646}
   mainCamera: {fileID: 0}
-  cameraMoveDuration: 2
+  cameraMoveDuration: 3
   victoryCanvas: {fileID: 0}
-  cameraFollowScript: {fileID: 0}
   enemiesDefeatedText: {fileID: 0}
   timeRemainingText: {fileID: 0}
 --- !u!1 &4957605393584318338

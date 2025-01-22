@@ -53,7 +53,7 @@ namespace Player
         // Corutina para restablecer el parámetro IsJumping después del salto
         private IEnumerator ResetJumpParameter()
         {
-            yield return new WaitForSeconds(0.1f); // Ajusta el tiempo según la duración del salto
+            yield return new WaitForSeconds(0.1f);
             _animator.SetBool("IsJumping", false);
         }
     }
