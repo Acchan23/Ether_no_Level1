@@ -10,6 +10,11 @@ public class Vida : MonoBehaviour
     private Animator animator;
     public bool isDead = false;
 
+    public float VidaActual
+    {
+        get {return vidaActual;}
+    }
+
 
     [Header("UI")]
     public Slider barraDeVida;

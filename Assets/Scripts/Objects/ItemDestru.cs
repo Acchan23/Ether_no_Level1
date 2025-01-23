@@ -7,20 +7,26 @@ public class ItemDestru : MonoBehaviour
      [Header("Settings")]
         public string nombre;
 
-        public int vida;
+        private Vida vida;
         public GameObject pocima;
+
+        private void Awake()
+        {
+            vida = GetComponent<Vida>();
+        }
 
         private void Update()
         {
             
-            if(vida <= 0)
+            if(vida != null && vida.VidaActual <= 0)
             {
-                PosibilidadMoneda();
+                Debug.Log("El barril ha sido destruido");
+                PosibilidadPocima();
                 Destroy(gameObject);
             }
         }
 
-         private void PosibilidadMoneda ()
+         private void PosibilidadPocima ()
         {
             float posibilidad = UnityEngine.Random.Range(0f, 100f);
 
