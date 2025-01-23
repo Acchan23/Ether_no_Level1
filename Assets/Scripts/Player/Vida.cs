@@ -88,32 +88,33 @@ public class Vida : MonoBehaviour
     }
 
    private IEnumerator Muerte()
-{
-    isDead = true;
-    Debug.Log($"{gameObject.name} ha muerto.");
-    
-    if (animator != null)
     {
+        isDead = true;
+        Debug.Log($"{gameObject.name} ha muerto.");
+    
+        if (animator != null)
+        {
         animator.SetBool("IsDead", true); // Activa la animación de muerte
         animator.Play("Muerte");         // Forzar la animación de muerte
-    }
+        }
 
-    // Desactivar físicas y movimiento
-    var rb = GetComponent<Rigidbody>();
-    if (rb != null)
-        rb.isKinematic = true; // Evitar movimientos adicionales
+        // Desactivar físicas y movimiento
+        var rb = GetComponent<Rigidbody>();
+        if (rb != null)
+            rb.isKinematic = true; // Evitar movimientos adicionales
 
-    // Desactivar control del jugador
-    var playerControl = GetComponent<PlayerMovement>();
-    if (playerControl != null)
-        playerControl.enabled = false;
+        // Desactivar control del jugador
+        var playerControl = GetComponent<PlayerMovement>();
+        if (playerControl != null)
+            playerControl.enabled = false;
 
-    yield return new WaitForSeconds(4f); // Tiempo para mostrar animación
+        yield return new WaitForSeconds(3f); // Tiempo para mostrar animación
 
-    if (muerteCanvas != null)
-    {
+        if (muerteCanvas != null)
+        {
         muerteCanvas.gameObject.SetActive(true); // Muestra el Canvas de "Has muerto"
-    }
+        }
+        Destroy(gameObject);
     }
 
 
