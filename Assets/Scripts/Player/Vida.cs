@@ -2,6 +2,8 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using Enemy;
+using Player;
 
 public class Vida : MonoBehaviour
 {
@@ -42,6 +44,19 @@ public class Vida : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter(Collider other)
+{
+    if (other.CompareTag("Enemy"))
+    {
+        EnemyControl enemy = other.GetComponent<EnemyControl>();
+        if (enemy != null)
+        {
+            enemy.RecibirDaño(20f); // Aplica daño al enemigo
+        }
+    }
+}
+
+
     public void RecibirDaño(float cantidad)
     {
         vidaActual -= cantidad;
@@ -72,24 +87,43 @@ public class Vida : MonoBehaviour
         }
     }
 
-    private IEnumerator Muerte()
+   private IEnumerator Muerte()
+{
+    isDead = true;
+    Debug.Log($"{gameObject.name} ha muerto.");
+    
+    if (animator != null)
     {
-        isDead = true;
-        Debug.Log($"{gameObject.name} ha muerto.");
         animator.SetBool("IsDead", true); // Activa la animación de muerte
-        animator.Play("Muerte"); // Forzar la animación de muerte
-
-        yield return new WaitForSeconds(4f); // Espera antes de mostrar el Canvas
-
-        if (muerteCanvas != null)
-        {
-            muerteCanvas.gameObject.SetActive(true); // Activa el Canvas de "Has muerto"
-        }
+        animator.Play("Muerte");         // Forzar la animación de muerte
     }
 
- 
+    // Desactivar físicas y movimiento
+    var rb = GetComponent<Rigidbody>();
+    if (rb != null)
+        rb.isKinematic = true; // Evitar movimientos adicionales
+
+    // Desactivar control del jugador
+    var playerControl = GetComponent<PlayerMovement>();
+    if (playerControl != null)
+        playerControl.enabled = false;
+
+    yield return new WaitForSeconds(4f); // Tiempo para mostrar animación
+
+    if (muerteCanvas != null)
+    {
+        muerteCanvas.gameObject.SetActive(true); // Muestra el Canvas de "Has muerto"
+    }
+    }
+
+
     public void ReiniciarNivel()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); // Reinicia el nivel actual
+    if (muerteCanvas != null)
+        muerteCanvas.gameObject.SetActive(false);
+
+    SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
+
+    
 }

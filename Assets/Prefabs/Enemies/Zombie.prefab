@@ -1727,7 +1727,7 @@ GameObject:
   - component: {fileID: -2010738619734181005}
   m_Layer: 7
   m_Name: Zombie
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1863,9 +1863,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   chaseSpeed: 4
   detectionRange: 8
-  player: {fileID: 0}
   attackRange: 1.5
+  tiempoEntreAtaques: 3
   dano: 10
+  player: {fileID: 0}
 --- !u!1 &4710940672626480558
 GameObject:
   m_ObjectHideFlags: 0

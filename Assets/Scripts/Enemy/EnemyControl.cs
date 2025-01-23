@@ -2,133 +2,147 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 namespace Enemy
 {
     public class EnemyControl : MonoBehaviour
     {
+        [Header("Settings")]
+        public float chaseSpeed = 4f;
+        public float detectionRange = 5f;
+        public float attackRange = 1.5f;
+        public float tiempoEntreAtaques = 3f;
+        public float dano = 10f;
 
-    [Header("Settings")]
-    
-    public float chaseSpeed = 4f;            // Velocidad cuando persigue al jugador
-    public float detectionRange = 5f;        // Rango de detección del jugador
-    private float proximoAtaque;
-    private float tiempoEntreAtaques = 3;
+        private float proximoAtaque;
+        private Animator _animator;
+        private Rigidbody _rb;
+        private bool _isChasing = false;
+        private bool _isAttacking = false;
+        private bool isDead = false;
 
-    [Header("Player Reference")]
-    public Transform player;                 // Referencia al transform del jugador   
-    private Rigidbody _rb;                   
-    private Animator _animator;              
-    private bool _isChasing;                 
-    public float attackRange = 1.5f; 
-    private bool _isAttacking = false; 
-    public float dano = 10f;
+        [Header("Player Reference")]
+        public Transform player;
 
-
-    void Awake()
-    {
-        // Inicializamos componentes y estado
-        _rb = GetComponent<Rigidbody>();
-        _animator = GetComponent<Animator>();
-        _isChasing = false;
-    }
-
-    void Update()
-{
-    // Calcular distancia al jugador
-    float distanceToPlayer = Vector3.Distance(transform.position, player.position);
-
-    if (distanceToPlayer <= attackRange)
-    {
-        _isChasing = false;
-        _isAttacking = true;
-    }
-    else if (distanceToPlayer <= detectionRange)
-    {
-        _isChasing = true;
-        _isAttacking = false;
-    }
-    else
-    {
-        _isChasing = false;
-        _isAttacking = false;
-    }
-
-    // Ejecutar comportamiento basado en el estado
-    if (_isAttacking && Time.time >= proximoAtaque)
-    {
-        AttackPlayer();
-        proximoAtaque = Time.time + tiempoEntreAtaques;
-    }
-    else if (_isChasing)
-    {
-        ChasePlayer();
-    }
-   
-
-    // Actualizar parámetros del Animator
-    UpdateAnimation();
-}
-
-    private void ChasePlayer()
-    {
-        // Mover hacia el jugador
-        Vector3 direction = (player.position - transform.position).normalized;
-        direction.y = 0; // Bloquear movimiento en Y
-        _rb.velocity = direction * chaseSpeed;
-
-        if (direction != Vector3.zero)
+        private void Awake()
         {
-        Quaternion targetRotation = Quaternion.LookRotation(direction);
-        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * chaseSpeed);
-        }
-    }
+            _rb = GetComponent<Rigidbody>();
+            _animator = GetComponent<Animator>();
 
-    private void AttackPlayer()
-    {
-        // Detener movimiento
-        _rb.velocity = Vector3.zero;
+            if (player == null)
+            {
+            GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
+            if (playerObject != null)
+            {
+            player = playerObject.transform;
+            }
+            }
 
-        // Orientar hacia el jugador
-        Vector3 direction = (player.position - transform.position).normalized;
-        direction.y = 0;
-        if (direction != Vector3.zero)
-        {
-            Quaternion targetRotation = Quaternion.LookRotation(direction);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * chaseSpeed);
+            if (player == null)
+            {
+                Debug.LogError("No se encontró al jugador en la escena. Asegúrate de que tenga la etiqueta 'Player'.");
+            }
         }
 
-        Vida vidaJugador = player.GetComponent<Vida>();
-        if (vidaJugador != null)
+        private void Update()
         {
-            vidaJugador.RecibirDaño(dano);
+            if (isDead) return;
+
+            if (player == null) return;
+
+            float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+
+            if (distanceToPlayer <= attackRange)
+            {
+                _isChasing = false;
+                _isAttacking = true;
+            }
+            else if (distanceToPlayer <= detectionRange)
+            {
+                _isChasing = true;
+                _isAttacking = false;
+            }
+            else
+            {
+                _isChasing = false;
+                _isAttacking = false;
+            }
+
+            if (_isAttacking && Time.time >= proximoAtaque)
+            {
+                AttackPlayer();
+                proximoAtaque = Time.time + tiempoEntreAtaques;
+            }
+            else if (_isChasing)
+            {
+                ChasePlayer();
+            }
+
+            UpdateAnimation();
         }
 
-        Debug.Log($"{gameObject.name} atacó al jugador");
-
-        // Realizar ataque (en la animación puede haber un evento que aplique el daño)
-        if (_animator != null)
+        private void ChasePlayer()
         {
-            _animator.SetTrigger("Attack");
+            Vector3 direction = (player.position - transform.position).normalized;
+            direction.y = 0;
+            _rb.velocity = direction * chaseSpeed;
+
+            if (direction != Vector3.zero)
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(direction);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * chaseSpeed);
+            }
+        }
+
+        private void AttackPlayer()
+        {
+            _rb.velocity = Vector3.zero;
+
+            Vida vidaJugador = player.GetComponent<Vida>();
+            if (vidaJugador != null)
+            {
+                vidaJugador.RecibirDaño(dano);
+            }
+
+            if (_animator != null)
+            {
+                _animator.SetTrigger("Attack");
+            }
+        }
+
+        public void RecibirDaño(float cantidad)
+        {
+            if (isDead) return;
+
+            // Implementar lógica de vida
+            Debug.Log($"{gameObject.name} recibió {cantidad} de daño.");
+
+            // Aquí puedes hacer un sistema de vida del enemigo
+            // Si quieres un sistema fijo, simplemente mata al enemigo cuando reciba daño:
+            Matar();
+        }
+
+        private void Matar()
+        {
+            isDead = true;
+            if (_animator != null)
+            {
+                _animator.SetBool("IsDead", true);
+                _animator.Play("Muerte");
+            }
+            Destroy(gameObject, 3f); // Espera 3 segundos para eliminar al enemigo
+        }
+
+        private void UpdateAnimation()
+        {
+            float speed = _rb.velocity.magnitude;
+
+            if (_animator != null)
+            {
+                _animator.SetFloat("Speed", speed);
+                _animator.SetBool("IsChasing", _isChasing);
+                _animator.SetBool("IsAttacking", _isAttacking);
+            }
         }
     }
-
-    private void UpdateAnimation()
-    {
-        // Calcular velocidad actual
-        float speed = _rb.velocity.magnitude;
-
-        // Actualizar los parámetros del Animator
-        _animator.SetFloat("Speed", speed);               // Velocidad del enemigo
-        _animator.SetBool("IsChasing", _isChasing);       // Estado de persecución
-        _animator.SetBool("IsAttacking", _isAttacking);
-    }
-
-    private void OnDrawGizmosSelected()
-    {
-        // Dibuja el rango de detección para depuración
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, detectionRange);
-    }
-}
-
 }
