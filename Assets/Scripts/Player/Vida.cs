@@ -1,7 +1,7 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Vida : MonoBehaviour
 {
@@ -12,12 +12,14 @@ public class Vida : MonoBehaviour
 
     public float VidaActual
     {
-        get {return vidaActual;}
+        get { return vidaActual; }
     }
-
 
     [Header("UI")]
     public Slider barraDeVida;
+
+    [Header("Canvas")]
+    public Canvas muerteCanvas; 
 
     private void Awake()
     {
@@ -32,6 +34,11 @@ public class Vida : MonoBehaviour
         {
             barraDeVida.maxValue = vidaMaxima; // Configura el valor máximo de la barra
             barraDeVida.value = vidaActual;   // Ajusta el valor inicial de la barra
+        }
+
+        if (muerteCanvas != null)
+        {
+            muerteCanvas.gameObject.SetActive(false); // Asegúrate de que el Canvas esté desactivado al inicio
         }
     }
 
@@ -70,8 +77,19 @@ public class Vida : MonoBehaviour
         isDead = true;
         Debug.Log($"{gameObject.name} ha muerto.");
         animator.SetBool("IsDead", true); // Activa la animación de muerte
-        animator.Play("Muerte"); //Forzar la animación de muerte
-        yield return new WaitForSeconds(4f); // Espera 5 segundos antes de destruir el objeto
-        Destroy(gameObject); // Destruye el objeto
+        animator.Play("Muerte"); // Forzar la animación de muerte
+
+        yield return new WaitForSeconds(4f); // Espera antes de mostrar el Canvas
+
+        if (muerteCanvas != null)
+        {
+            muerteCanvas.gameObject.SetActive(true); // Activa el Canvas de "Has muerto"
+        }
+    }
+
+ 
+    public void ReiniciarNivel()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); // Reinicia el nivel actual
     }
 }
