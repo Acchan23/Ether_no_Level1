@@ -38,7 +38,17 @@ namespace Enemy
         // Instanciar el enemigo en la posición generada
         Instantiate(enemyPrefab, spawnPosition, Quaternion.identity);
     }
-}
+
+    private void OnDrawGizmos()
+    {
+        // Dibuja un cubo que representa el área de spawn
+        Gizmos.color = new Color(1, 0, 0, 0.5f); // Color rojo con transparencia
+        Vector3 size = spawnAreaMax - spawnAreaMin;
+        Vector3 center = spawnAreaMin + size / 2;
+        Gizmos.DrawCube(center, size);
+    }
+
+    }
 
 }
 
