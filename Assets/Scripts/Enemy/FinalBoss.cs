@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Player;
 
 namespace Enemy
 {
@@ -17,12 +18,30 @@ public class FinalBoss : MonoBehaviour
 
     private Transform player;
     private bool isCharging = false;
+    private VictoryCondition victoryCondition;
 
     private void Start()
     {
-        currentHealth = maxHealth;
-        player = GameObject.FindGameObjectWithTag("Player").transform;
+       currentHealth = maxHealth;
+       player = GameObject.FindGameObjectWithTag("Player").transform;
+
+       // Busca el script VictoryCondition en la escena
+       victoryCondition = FindObjectOfType<VictoryCondition>();
     }
+
+    void Die()
+    {
+       Debug.Log("Enemigo final derrotado.");
+
+       // Notifica a VictoryCondition que el jefe ha sido derrotado
+       if (victoryCondition != null)
+       {
+          victoryCondition.OnBossDefeated();
+       }
+
+        Destroy(gameObject); // Destruye al jefe
+       }
+
 
     private void Update()
     {
@@ -87,13 +106,6 @@ public class FinalBoss : MonoBehaviour
         {
             Die();
         }
-    }
-
-    void Die()
-    {
-        // Agrega lógica de muerte
-        Debug.Log("Enemigo final derrotado.");
-        Destroy(gameObject);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

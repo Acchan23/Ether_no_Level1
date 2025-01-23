@@ -3,7 +3,10 @@ using UnityEngine;
 using TMPro; // Necesario para TextMeshPro
 using UnityEngine.SceneManagement;
 
-public class VictoryCondition : MonoBehaviour
+
+namespace Player
+{
+    public class VictoryCondition : MonoBehaviour
 {
     public int requiredEnemies = 20; // Enemigos necesarios para activar el portal
     public float timeLimit = 600f; // Tiempo en segundos (10 minutos)
@@ -137,5 +140,6 @@ public class VictoryCondition : MonoBehaviour
     public void ShowCredits()
     {
         SceneManager.LoadScene("Credits");
+    }
     }
 }
