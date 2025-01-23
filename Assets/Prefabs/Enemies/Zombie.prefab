@@ -1724,6 +1724,7 @@ GameObject:
   - component: {fileID: 5959305670801531234}
   - component: {fileID: 3604419814485117994}
   - component: {fileID: 595399324173652257}
+  - component: {fileID: -2010738619734181005}
   m_Layer: 7
   m_Name: Zombie
   m_TagString: Untagged
@@ -1847,6 +1848,23 @@ MonoBehaviour:
   vidaMaxima: 40
   isDead: 0
   barraDeVida: {fileID: 0}
+--- !u!114 &-2010738619734181005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4493914613880827488}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2e79830339bc478ba34c133bccfefa1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chaseSpeed: 4
+  detectionRange: 8
+  player: {fileID: 0}
+  attackRange: 1.5
+  dano: 10
 --- !u!1 &4710940672626480558
 GameObject:
   m_ObjectHideFlags: 0

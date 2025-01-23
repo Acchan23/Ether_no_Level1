@@ -2,7 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyPatrol : MonoBehaviour
+
+namespace Enemy
+{
+    public class EnemyPatrol : MonoBehaviour
 {
     [Header("Patrol Points")]
     public Transform pointA;                  // Punto A para patrullar
@@ -158,4 +161,6 @@ public class EnemyPatrol : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, detectionRange);
     }
+}
+
 }
