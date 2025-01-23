@@ -1848,6 +1848,7 @@ MonoBehaviour:
   vidaMaxima: 40
   isDead: 0
   barraDeVida: {fileID: 0}
+  muerteCanvas: {fileID: 0}
 --- !u!114 &-2010738619734181005
 MonoBehaviour:
   m_ObjectHideFlags: 0

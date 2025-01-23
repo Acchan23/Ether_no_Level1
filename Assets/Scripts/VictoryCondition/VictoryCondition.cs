@@ -36,7 +36,11 @@ namespace Player
         if (gameOverCanvas != null)
             gameOverCanvas.gameObject.SetActive(false);
 
-        UpdateUI(); // Actualiza la interfaz al inicio
+        // Desactivar el portal al inicio del juego
+        if (portal != null)
+            portal.gameObject.SetActive(false);
+
+            UpdateUI(); // Actualiza la interfaz al inicio
     }
 
     void Update()
