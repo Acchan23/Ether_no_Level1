@@ -1,95 +1,87 @@
 using System.Collections;
 using UnityEngine;
-using TMPro; // Necesario para TextMeshPro
+using TMPro;
 using UnityEngine.SceneManagement;
 
 namespace Player
 {
     public class VictoryCondition : MonoBehaviour
     {
-        public int requiredEnemies = 20; // Enemigos necesarios para activar el portal
-        public float timeLimit = 600f; // Tiempo en segundos (10 minutos)
+        public int requiredEnemies = 20;
+        public float timeLimit = 600f;
 
-        public Transform portal; // Portal de salida
-        public Transform bossArea; // Área del jefe final
-        public Transform player; // El jugador
-        public Transform boss; // Objeto del jefe
-        public Camera mainCamera; // Cámara principal
-        public float cameraMoveDuration = 2f; // Duración del movimiento de cámara
-        public Canvas victoryCanvas; // Canvas para victoria
-        public Canvas gameOverCanvas; // Canvas para tiempo terminado
-        private CameraFollow cameraFollowScript; // Script de seguimiento de la cámara
+        public Transform portal;
+        public Transform bossArea;
+        public Transform player;
+        public Transform boss;
+        public Camera mainCamera;
+        public float cameraMoveDuration = 2f;
+        public Canvas victoryCanvas;
+        public Canvas gameOverCanvas;
 
-        // UI con TextMeshPro
-        public TextMeshProUGUI enemiesDefeatedText; // Texto para mostrar enemigos derrotados
-        public TextMeshProUGUI timeRemainingText; // Texto para mostrar tiempo restante
+        public TextMeshProUGUI enemiesDefeatedText;
+        public TextMeshProUGUI timeRemainingText;
 
+        private CameraFollow cameraFollowScript;
         private int defeatedEnemies = 0;
         private float elapsedTime = 0f;
 
         void Start()
         {
-            // Desactivar el Canvas de Victory al inicio
-            if (victoryCanvas != null)
-                victoryCanvas.gameObject.SetActive(false);
+            if (portal == null || bossArea == null || player == null || mainCamera == null || victoryCanvas == null || gameOverCanvas == null)
+            {
+                Debug.LogError("Algunas referencias no están asignadas en VictoryCondition. Revisa el inspector.");
+                this.enabled = false;
+                return;
+            }
 
-            if (gameOverCanvas != null)
-                gameOverCanvas.gameObject.SetActive(false);
+            victoryCanvas.gameObject.SetActive(false);
+            gameOverCanvas.gameObject.SetActive(false);
+            portal.gameObject.SetActive(false);
+            boss.gameObject.SetActive(false);
 
-            // Desactivar el portal y el jefe al inicio del juego
-            if (portal != null)
-                portal.gameObject.SetActive(false);
-
-            if (boss != null)
-                boss.gameObject.SetActive(false);
-
-            UpdateUI(); // Actualiza la interfaz al inicio
+            cameraFollowScript = mainCamera.GetComponent<CameraFollow>();
+            UpdateUI();
         }
 
         void Update()
         {
-            // Incrementar tiempo transcurrido
             elapsedTime += Time.deltaTime;
-
-            // Calcular tiempo restante
             float timeRemaining = Mathf.Max(0, timeLimit - elapsedTime);
 
-            // Actualizar la UI en cada frame
             UpdateUI();
 
-            // Verificar condición de tiempo
             if (timeRemaining <= 0)
             {
                 Debug.Log("Tiempo agotado. ¡Perdiste!");
-
                 if (gameOverCanvas != null)
                     gameOverCanvas.gameObject.SetActive(true);
+
+                this.enabled = false;
                 return;
             }
 
-            // Verificar condición de victoria
             if (defeatedEnemies >= requiredEnemies)
             {
-                portal.gameObject.SetActive(true); // Activar el portal
+                portal.gameObject.SetActive(true);
                 StartCoroutine(MoveCameraToPortalAndSpawnBoss());
-                this.enabled = false; // Detener la lógica para no repetir
+                this.enabled = false;
             }
         }
 
         public void OnEnemyDefeated()
         {
             defeatedEnemies++;
+            Debug.Log($"Enemigo derrotado. Total: {defeatedEnemies}/{requiredEnemies}");
         }
 
         private void UpdateUI()
         {
-            // Actualizar texto de enemigos derrotados
             if (enemiesDefeatedText != null)
             {
                 enemiesDefeatedText.text = $"Enemies Defeated: {defeatedEnemies} / {requiredEnemies}";
             }
 
-            // Actualizar texto de tiempo restante
             if (timeRemainingText != null)
             {
                 float timeRemaining = Mathf.Max(0, timeLimit - elapsedTime);
@@ -119,13 +111,11 @@ namespace Player
                 yield return null;
             }
 
-            yield return new WaitForSeconds(3f); // Pausa para destacar el portal activado
+            yield return new WaitForSeconds(3f);
 
-            // Activar al jefe después de la animación de la cámara
             if (boss != null)
                 boss.gameObject.SetActive(true);
 
-            // Restaurar la posición original de la cámara
             mainCamera.transform.position = originalPosition;
             mainCamera.transform.rotation = originalRotation;
 
@@ -135,8 +125,11 @@ namespace Player
 
         public void OnBossDefeated()
         {
+            Debug.Log("¡Jefe derrotado! Victoria.");
             if (victoryCanvas != null)
                 victoryCanvas.gameObject.SetActive(true);
+
+            this.enabled = false; // Detener lógica después de la victoria
         }
 
         public void ExitGame()

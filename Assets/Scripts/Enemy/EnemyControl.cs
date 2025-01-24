@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Player;
 
 
 namespace Enemy
@@ -23,6 +24,7 @@ namespace Enemy
 
         [Header("Player Reference")]
         public Transform player;
+        private VictoryCondition victoryCondition;
 
         private void Awake()
         {
@@ -31,18 +33,29 @@ namespace Enemy
 
             if (player == null)
             {
-            GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
-            if (playerObject != null)
-            {
-            player = playerObject.transform;
-            }
+                GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
+                if (playerObject != null)
+                {
+                    player = playerObject.transform;
+                }
             }
 
             if (player == null)
             {
                 Debug.LogError("No se encontró al jugador en la escena. Asegúrate de que tenga la etiqueta 'Player'.");
             }
+            else
+            {
+                // Obtener el script VictoryCondition desde el jugador
+                victoryCondition = player.GetComponent<VictoryCondition>();
+
+                if (victoryCondition == null)
+                {
+                    Debug.LogError("No se encontró el script VictoryCondition en el jugador.");
+                }
+            }
         }
+
 
         private void Update()
         {
@@ -122,16 +135,28 @@ namespace Enemy
             Matar();
         }
 
-        private void Matar()
-        {
-            isDead = true;
-            if (_animator != null)
+        
+            private void Matar()
             {
-                _animator.SetBool("IsDead", true);
-                _animator.Play("Muerte");
+                isDead = true;
+
+                if (victoryCondition != null)
+                {
+                    victoryCondition.OnEnemyDefeated();
+                }
+                else
+                {
+                    Debug.LogError("VictoryCondition no está asignado en el jugador.");
+                }
+
+                if (_animator != null)
+                {
+                    _animator.SetBool("IsDead", true);
+                    _animator.Play("Muerte");
+                }
+                Destroy(gameObject, 3f); // Espera 3 segundos para eliminar al enemigo
             }
-            Destroy(gameObject, 3f); // Espera 3 segundos para eliminar al enemigo
-        }
+           
 
         private void UpdateAnimation()
         {
