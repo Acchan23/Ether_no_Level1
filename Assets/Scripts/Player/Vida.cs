@@ -52,34 +52,36 @@ public class Vida : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
 {
-    if (other.CompareTag("Enemy"))
+    if (other.CompareTag("Enemy") && !isDead) 
     {
         EnemyControl enemy = other.GetComponent<EnemyControl>();
         if (enemy != null)
         {
-            enemy.RecibirDaño(20f); // Aplica daño al enemigo
+            enemy.RecibirDaño(20f); 
         }
     }
 }
 
+public void RecibirDaño(float cantidad)
+{
+    Debug.Log($"{gameObject.name} antes de recibir daño: Vida actual: {vidaActual}");
 
-    public void RecibirDaño(float cantidad)
+    vidaActual -= cantidad;
+    vidaActual = Mathf.Clamp(vidaActual, 0, vidaMaxima); // Limitar entre 0 y vida máxima
+
+    Debug.Log($"{gameObject.name} recibió {cantidad} de daño. Vida actual: {vidaActual}");
+
+    if (barraDeVida != null)
     {
-        vidaActual -= cantidad;
-        vidaActual = Mathf.Clamp(vidaActual, 0, vidaMaxima); // Limitar entre 0 y vida máxima
-
-        Debug.Log($"{gameObject.name} recibió {cantidad} de daño. Vida actual: {vidaActual}");
-
-        if (barraDeVida != null)
-        {
-            barraDeVida.value = vidaActual; // Actualiza la barra de vida
-        }
-
-        if (vidaActual <= 0)
-        {
-            StartCoroutine(Muerte()); // Llamar corrutina
-        }
+        barraDeVida.value = vidaActual; // Actualiza la barra de vida
     }
+
+    if (vidaActual <= 0 && !isDead)
+    {
+        StartCoroutine(Muerte()); // Llamar corrutina
+    }
+}
+
 
     public void Curar(float cantidad)
     {
@@ -95,6 +97,11 @@ public class Vida : MonoBehaviour
 
    private IEnumerator Muerte()
     {
+        if (isDead)
+    {
+        yield break;
+    }
+        
         isDead = true;
         Debug.Log($"{gameObject.name} ha muerto.");
     
@@ -120,7 +127,7 @@ public class Vida : MonoBehaviour
         {
         muerteCanvas.gameObject.SetActive(true); // Muestra el Canvas de "Has muerto"
         }
-        Destroy(gameObject,4);  
+        Destroy(gameObject);  
     }
 
 

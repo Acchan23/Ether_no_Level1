@@ -24,12 +24,19 @@ namespace Enemy
 
         [Header("Player Reference")]
         public Transform player;
-        private VictoryCondition victoryCondition;
+        private Vida vida;
+        
 
         private void Awake()
         {
             _rb = GetComponent<Rigidbody>();
             _animator = GetComponent<Animator>();
+
+            vida = GetComponent<Vida>();
+            if (vida == null)
+            {
+                Debug.LogError("El enemigo no tiene el componente 'Vida'.");
+            }
 
             if (player == null)
             {
@@ -44,22 +51,13 @@ namespace Enemy
             {
                 Debug.LogError("No se encontró al jugador en la escena. Asegúrate de que tenga la etiqueta 'Player'.");
             }
-            else
-            {
-                // Obtener el script VictoryCondition desde el jugador
-                victoryCondition = player.GetComponent<VictoryCondition>();
-
-                if (victoryCondition == null)
-                {
-                    Debug.LogError("No se encontró el script VictoryCondition en el jugador.");
-                }
-            }
+            
         }
 
 
         private void Update()
         {
-            if (isDead) return;
+            if (vida != null && vida.isDead) return;
 
             if (player == null) return;
 
@@ -126,33 +124,18 @@ namespace Enemy
         public void RecibirDaño(float cantidad)
         {
             if (isDead) return;
+            if (vida != null)
+            {
+                vida.RecibirDaño(cantidad); 
+            }
+            else
+            {
+                Debug.LogError("No se encontró el componente Vida en el enemigo.");
+            }
 
             // Implementar lógica de vida
             Debug.Log($"{gameObject.name} recibió {cantidad} de daño.");
 
-            Matar();
-        }
-
-        
-        private void Matar()
-        {
-           isDead = true;
-
-           if (victoryCondition != null)
-           {
-              victoryCondition.OnEnemyDefeated();
-           }
-           else
-           {
-              Debug.LogError("VictoryCondition no está asignado en el jugador.");
-           }
-
-           if (_animator != null)
-           {
-              _animator.SetBool("IsDead", true);
-              _animator.Play("Muerte");
-           }
-              Destroy(gameObject, 3f); // Espera 3 segundos para eliminar al enemigo
         }
            
 

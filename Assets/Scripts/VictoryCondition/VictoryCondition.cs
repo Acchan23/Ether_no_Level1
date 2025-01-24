@@ -25,6 +25,12 @@ namespace Player
         private CameraFollow cameraFollowScript;
         public int defeatedEnemies;
         private float elapsedTime = 0f;
+        private Vida vida;
+
+        private void Awake()
+        {
+            vida = GetComponent<Vida>();
+        }
 
         void Start()
         {
@@ -71,11 +77,12 @@ namespace Player
 
         public void OnEnemyDefeated()
         {
+          
             defeatedEnemies++;
             Debug.Log($"Enemigo derrotado. Total: {defeatedEnemies}/{requiredEnemies}");
-
-             UpdateUI();
+            UpdateUI(); 
         }
+    
 
         private void UpdateUI()
         {
