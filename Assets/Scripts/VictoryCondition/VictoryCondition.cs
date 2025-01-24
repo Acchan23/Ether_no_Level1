@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using TMPro;
-using UnityEngine.SceneManagement;
+
 
 namespace Player
 {
@@ -181,23 +181,6 @@ namespace Player
                 }
             }
         }
-
-        // ===================================
-        // FUNCIONES DE MENÚ Y SALIDA
-        // ===================================
-        public void ExitGame()
-        {
-            Application.Quit();
-        }
-
-        public void GoToMainMenu()
-        {
-            SceneManager.LoadScene("MainMenu");
-        }
-
-        public void ShowCredits()
-        {
-            SceneManager.LoadScene("Credits");
-        }
+        
     }
 }

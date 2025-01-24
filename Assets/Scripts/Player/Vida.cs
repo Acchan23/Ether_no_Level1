@@ -107,11 +107,6 @@ public class Vida : MonoBehaviour
     }
 
 
-    public void ReiniciarNivel()
-    {
-        muerteCanvas?.gameObject.SetActive(false);
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-    }
 
     private void ActualizarBarraDeVida()
     {
