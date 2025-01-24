@@ -11,6 +11,7 @@ public class Vida : MonoBehaviour
     private float vidaActual;
     private Animator animator;
     public bool isDead = false;
+    private VictoryCondition victoryCondition;
 
     public float VidaActual
     {
@@ -26,6 +27,11 @@ public class Vida : MonoBehaviour
     private void Awake()
     {
         animator = GetComponent<Animator>();
+        GameObject jugador = GameObject.FindGameObjectWithTag("Player");
+        if (jugador != null)
+        {
+            victoryCondition = jugador.GetComponent<VictoryCondition>();
+        }
     }
 
     private void Start()
@@ -98,10 +104,10 @@ public class Vida : MonoBehaviour
         animator.Play("Muerte");         // Forzar la animación de muerte
         }
 
-        // Desactivar físicas y movimiento
-        var rb = GetComponent<Rigidbody>();
-        if (rb != null)
-            rb.isKinematic = true; // Evitar movimientos adicionales
+        if (CompareTag("Enemy") && victoryCondition != null)
+        {
+            victoryCondition.OnEnemyDefeated();
+        }
 
         // Desactivar control del jugador
         var playerControl = GetComponent<PlayerMovement>();
@@ -114,7 +120,7 @@ public class Vida : MonoBehaviour
         {
         muerteCanvas.gameObject.SetActive(true); // Muestra el Canvas de "Has muerto"
         }
-        Destroy(gameObject);
+        Destroy(gameObject,4);  
     }
 
 

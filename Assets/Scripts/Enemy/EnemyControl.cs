@@ -130,8 +130,6 @@ namespace Enemy
             // Implementar lógica de vida
             Debug.Log($"{gameObject.name} recibió {cantidad} de daño.");
 
-            // Aquí puedes hacer un sistema de vida del enemigo
-            // Si quieres un sistema fijo, simplemente mata al enemigo cuando reciba daño:
             Matar();
         }
 

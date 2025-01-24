@@ -23,7 +23,7 @@ namespace Player
         public TextMeshProUGUI timeRemainingText;
 
         private CameraFollow cameraFollowScript;
-        public int defeatedEnemies = 0;
+        public int defeatedEnemies;
         private float elapsedTime = 0f;
 
         void Start()
@@ -73,6 +73,8 @@ namespace Player
         {
             defeatedEnemies++;
             Debug.Log($"Enemigo derrotado. Total: {defeatedEnemies}/{requiredEnemies}");
+
+             UpdateUI();
         }
 
         private void UpdateUI()
