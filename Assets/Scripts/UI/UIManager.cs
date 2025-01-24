@@ -6,10 +6,6 @@ using UnityEngine.SceneManagement;
 public class UIManager : MonoBehaviour
 {
 
-    
-    
-
-
     public void ExitGame()
     {
         Application.Quit();
@@ -29,4 +25,10 @@ public class UIManager : MonoBehaviour
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
+
+    public void PlayAgain()
+    {
+        SceneManager.LoadScene("Ether_no_Lvl1");
+    }
+
 }

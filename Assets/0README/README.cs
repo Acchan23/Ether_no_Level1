@@ -12,6 +12,7 @@ Antorchas: https://assetstore.unity.com/packages/3d/environments/campfires-torch
 House: https://assetstore.unity.com/packages/3d/environments/fantasy/lowpoly-baker-s-house-26443
 VFX: https://assetstore.unity.com/packages/vfx/particles/ultimate-loot-vfx-pack-175-effects-242936
 Pócimas: https://assetstore.unity.com/packages/3d/props/potions-coin-and-box-of-pandora-pack-71778
+UI: https://assetstore.unity.com/packages/2d/gui/icons/steampunkui-238976
 
 Cuidado con el fuego. 
 
