@@ -7,7 +7,10 @@ namespace Player
 {
     public class VictoryCondition : MonoBehaviour
     {
-        public int requiredEnemies = 20;
+        // ===================================
+        // VARIABLES PÚBLICAS
+        // ===================================
+        public int requiredEnemies = 10;
         public float timeLimit = 600f;
 
         public Transform portal;
@@ -22,11 +25,21 @@ namespace Player
         public TextMeshProUGUI enemiesDefeatedText;
         public TextMeshProUGUI timeRemainingText;
 
+        // Configuración del área del jefe
+        public Vector3 bossBattleAreaCenter = new Vector3(42.2959862f, 6.77804852f, 9.83252335f);
+        public float bossBattleAreaRadius = 20f; // Radio del área del barco
+
+        // ===================================
+        // VARIABLES PRIVADAS
+        // ===================================
         private CameraFollow cameraFollowScript;
         public int defeatedEnemies;
         private float elapsedTime = 0f;
         private Vida vida;
 
+        // ===================================
+        // Méto UNITY
+        // ===================================
         private void Awake()
         {
             vida = GetComponent<Vida>();
@@ -52,11 +65,13 @@ namespace Player
 
         void Update()
         {
+            // Actualizar el tiempo transcurrido
             elapsedTime += Time.deltaTime;
             float timeRemaining = Mathf.Max(0, timeLimit - elapsedTime);
 
             UpdateUI();
 
+            // Condición de derrota por tiempo
             if (timeRemaining <= 0)
             {
                 Debug.Log("Tiempo agotado. ¡Perdiste!");
@@ -67,22 +82,36 @@ namespace Player
                 return;
             }
 
+            // Condición para desbloquear el portal y convocar al jefe
             if (defeatedEnemies >= requiredEnemies)
             {
                 portal.gameObject.SetActive(true);
                 StartCoroutine(MoveCameraToPortalAndSpawnBoss());
                 this.enabled = false;
             }
+
+            // Restringir al jefe dentro del área del barco
+            RestrictBossToBattleArea();
         }
 
+        // ===================================
+        // LÓGICA DEL JUEGO
+        // ===================================
         public void OnEnemyDefeated()
         {
-          
             defeatedEnemies++;
             Debug.Log($"Enemigo derrotado. Total: {defeatedEnemies}/{requiredEnemies}");
-            UpdateUI(); 
+            UpdateUI();
         }
-    
+
+        public void OnBossDefeated()
+        {
+            Debug.Log("¡Jefe derrotado! Victoria.");
+            if (victoryCanvas != null)
+                victoryCanvas.gameObject.SetActive(true);
+
+            this.enabled = false; // Detener lógica después de la victoria
+        }
 
         private void UpdateUI()
         {
@@ -100,6 +129,9 @@ namespace Player
             }
         }
 
+        // ===================================
+        // MECÁNICA DEL JEFE
+        // ===================================
         IEnumerator MoveCameraToPortalAndSpawnBoss()
         {
             if (cameraFollowScript != null)
@@ -123,7 +155,10 @@ namespace Player
             yield return new WaitForSeconds(3f);
 
             if (boss != null)
+            {
                 boss.gameObject.SetActive(true);
+                boss.position = bossBattleAreaCenter; // Mover al jefe al centro del área de batalla
+            }
 
             mainCamera.transform.position = originalPosition;
             mainCamera.transform.rotation = originalRotation;
@@ -132,15 +167,24 @@ namespace Player
                 cameraFollowScript.enabled = true;
         }
 
-        public void OnBossDefeated()
+        private void RestrictBossToBattleArea()
         {
-            Debug.Log("¡Jefe derrotado! Victoria.");
-            if (victoryCanvas != null)
-                victoryCanvas.gameObject.SetActive(true);
+            if (boss != null && boss.gameObject.activeSelf)
+            {
+                float distanceToCenter = Vector3.Distance(boss.position, bossBattleAreaCenter);
 
-            this.enabled = false; // Detener lógica después de la victoria
+                // Si el jefe está fuera del área, corrige su posición
+                if (distanceToCenter > bossBattleAreaRadius)
+                {
+                    Vector3 directionToCenter = (bossBattleAreaCenter - boss.position).normalized;
+                    boss.position = bossBattleAreaCenter + directionToCenter * bossBattleAreaRadius;
+                }
+            }
         }
 
+        // ===================================
+        // FUNCIONES DE MENÚ Y SALIDA
+        // ===================================
         public void ExitGame()
         {
             Application.Quit();

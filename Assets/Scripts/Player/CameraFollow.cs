@@ -6,9 +6,10 @@ public class CameraFollow : MonoBehaviour
 {
     public Transform target;          // The player or target to follow
     public Vector3 offset = new Vector3(0, 5, -5); // Offset of the camera relative to the target
-    public float smoothSpeed = 0.135f; 
+    public float smoothSpeed = 0.135f;
+    public bool isShaking = false;
 
-     void Start()
+    void Start()
     {
        
         transform.position = target.position + offset;
@@ -21,7 +22,10 @@ public class CameraFollow : MonoBehaviour
 
     private void LateUpdate()
     {
-          if (target != null)
+
+        if (isShaking || target == null) return;
+
+        if (target != null)
         {
             transform.position = target.position + offset;
         }
@@ -31,6 +35,8 @@ public class CameraFollow : MonoBehaviour
             Debug.LogWarning("No target assigned for the camera to follow!");
             return;
         }
+
+        if (isShaking) return;
 
         // Calculate the desired position
         Vector3 desiredPosition = target.position + offset;

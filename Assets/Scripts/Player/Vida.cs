@@ -12,6 +12,9 @@ public class Vida : MonoBehaviour
     private Animator animator;
     public bool isDead = false;
     private VictoryCondition victoryCondition;
+    public CameraEffects cameraEffects;
+    
+
 
     public float VidaActual
     {
@@ -46,7 +49,7 @@ public class Vida : MonoBehaviour
 
         if (muerteCanvas != null)
         {
-            muerteCanvas.gameObject.SetActive(false); // Asegúrate de que el Canvas esté desactivado al inicio
+            muerteCanvas.gameObject.SetActive(false);
         }
     }
 
@@ -62,25 +65,35 @@ public class Vida : MonoBehaviour
     }
 }
 
-public void RecibirDaño(float cantidad)
-{
-    Debug.Log($"{gameObject.name} antes de recibir daño: Vida actual: {vidaActual}");
-
-    vidaActual -= cantidad;
-    vidaActual = Mathf.Clamp(vidaActual, 0, vidaMaxima); // Limitar entre 0 y vida máxima
-
-    Debug.Log($"{gameObject.name} recibió {cantidad} de daño. Vida actual: {vidaActual}");
-
-    if (barraDeVida != null)
+    public void RecibirDaño(float cantidad)
     {
-        barraDeVida.value = vidaActual; // Actualiza la barra de vida
-    }
+        Debug.Log($"{gameObject.name} antes de recibir daño: Vida actual: {vidaActual}");
 
-    if (vidaActual <= 0 && !isDead)
-    {
-        StartCoroutine(Muerte()); // Llamar corrutina
+        vidaActual -= cantidad;
+        vidaActual = Mathf.Clamp(vidaActual, 0, vidaMaxima); // Limitar entre 0 y vida máxima
+
+        Debug.Log($"{gameObject.name} recibió {cantidad} de daño. Vida actual: {vidaActual}");
+
+        // Actualizar barra de vida
+        if (barraDeVida != null)
+        {
+            barraDeVida.value = vidaActual;
+        }
+
+        // Efectos de daño
+        if (cameraEffects != null)
+        {
+            cameraEffects.StartShake(); // Llamar a la vibración
+        }
+
+       
+
+        // Verificar si el jugador muere
+        if (vidaActual <= 0 && !isDead)
+        {
+            StartCoroutine(Muerte());
+        }
     }
-}
 
 
     public void Curar(float cantidad)
@@ -108,7 +121,7 @@ public void RecibirDaño(float cantidad)
         if (animator != null)
         {
         animator.SetBool("IsDead", true); // Activa la animación de muerte
-        animator.Play("Muerte");         // Forzar la animación de muerte
+        animator.Play("Die");         // Forzar la animación de muerte
         }
 
         if (CompareTag("Enemy") && victoryCondition != null)
