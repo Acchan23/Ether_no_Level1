@@ -136,26 +136,26 @@ namespace Enemy
         }
 
         
-            private void Matar()
-            {
-                isDead = true;
+        private void Matar()
+        {
+           isDead = true;
 
-                if (victoryCondition != null)
-                {
-                    victoryCondition.OnEnemyDefeated();
-                }
-                else
-                {
-                    Debug.LogError("VictoryCondition no está asignado en el jugador.");
-                }
+           if (victoryCondition != null)
+           {
+              victoryCondition.OnEnemyDefeated();
+           }
+           else
+           {
+              Debug.LogError("VictoryCondition no está asignado en el jugador.");
+           }
 
-                if (_animator != null)
-                {
-                    _animator.SetBool("IsDead", true);
-                    _animator.Play("Muerte");
-                }
-                Destroy(gameObject, 3f); // Espera 3 segundos para eliminar al enemigo
-            }
+           if (_animator != null)
+           {
+              _animator.SetBool("IsDead", true);
+              _animator.Play("Muerte");
+           }
+              Destroy(gameObject, 3f); // Espera 3 segundos para eliminar al enemigo
+        }
            
 
         private void UpdateAnimation()

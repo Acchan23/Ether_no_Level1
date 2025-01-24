@@ -23,7 +23,7 @@ namespace Player
         public TextMeshProUGUI timeRemainingText;
 
         private CameraFollow cameraFollowScript;
-        private int defeatedEnemies = 0;
+        public int defeatedEnemies = 0;
         private float elapsedTime = 0f;
 
         void Start()
